@@ -1,0 +1,28 @@
+body{
+    background-color: green;
+}
+.centered-form{
+	margin-top: 60px;
+}
+
+.regg{
+  background-color:#cbf1f5;
+  width: 40%;
+  margin: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding-bottom: 100px;
+}
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #242320;
+  color: white;
+  text-align: center;
+}
+button{
+
+  align-self: center;
+}
