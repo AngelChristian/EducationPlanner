@@ -9,9 +9,11 @@ body{
   background-color:#cbf1f5;
   width: 40%;
   margin: auto;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  padding-bottom: 100px;
+
+  padding-bottom: 40px;
+  box-shadow: 0 0 10px #000;
+
+
 }
 footer {
   position: fixed;
@@ -25,4 +27,11 @@ footer {
 button{
 
   align-self: center;
+}
+@media only screen and (max-width: 572px) {
+  /* For mobile phones: */
+  .regg{
+    width:80%;
+    margin:0 12% 18% 12%;
+  }
 }

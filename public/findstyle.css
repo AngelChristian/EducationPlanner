@@ -32,3 +32,22 @@ footer {
   color: white;
   text-align: center;
 }
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-self:center;
+  justify-content:space-around
+}
+.list{
+  display: flex;
+  align-self: center;
+  justify-content: space-between;
+  text-align: center;
+}
+.logout{
+  position: absolute;
+
+   top: 20px;
+   right: 10px;
+  /* margin-bottom:40px; */
+}

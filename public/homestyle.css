@@ -10,8 +10,10 @@ body{
     border-bottom: none !important;
 }
 .tab-content{
-  position: static;
-  margin-left: 10%;
+      margin: auto;
+      margin-top: 0;
+  /* position: static;
+  margin-left: 10%; */
 }
 .nav {
    /* Set the navbar to fixed position */
@@ -51,15 +53,11 @@ body{
 .nav-tabs .nav-link.active{
    background-color: #a4d6ef !important;
 }
-.find{
-  margin-top: 15px;
-  margin-bottom: 25px;
 
-}
 .logout{
   position: absolute;
-   top: 10px;
-   right: 10px;
+   top: 55px;
+   right: 25px;
   /* margin-bottom:40px; */
 }
 footer {
@@ -70,4 +68,21 @@ footer {
   background-color: #242320;
   color: white;
   text-align: center;
+
+}
+
+@media only screen and (max-width: 499px) {
+  .logout{
+    position: absolute;
+    top:60px;
+    right:2px;
+
+  }
+  .name{
+     font-size: 30px
+  }
+  section{
+    margin-bottom: 20% 
+  }
+
 }

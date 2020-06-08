@@ -7,7 +7,7 @@ require('dotenv').config();
 app.set("view engine", "ejs");
 app.use(express.static('public'));
 const bodyParser = require('body-parser');
-var multer  = require('multer');
+var multer = require('multer');
 var path = require("path");
 var cloudinary = require('cloudinary');
 var session = require('express-session');
@@ -18,11 +18,13 @@ var GoogleStrategy = require('passport-google-oauth20').Strategy;
 var findOrCreate = require('mongoose-findorcreate');
 var flash = require('connect-flash');
 const DatauriParser = require('datauri/parser');
+const swal = require('sweetalert');
+
 //cloudinary
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.API_ID,
-  api_secret:  process.env.API_SECRET
+  api_secret: process.env.API_SECRET
 });
 
 //multer for images
@@ -35,25 +37,30 @@ var Storage = multer.memoryStorage();
 //     cb(null, file.fieldname + '-' + Date.now()+ '.' +extension);
 //   }
 // });
-const uploadFilter = function(req,file, cb) {
-    // filter rules here
-    if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF|bmp|BMP|jfif|JFIF)$/)) {
-       req.fileValidationError = 'Only image files are allowed!,go back and try again';
-       return cb(new Error('Only image files are allowed!,go back and try again'), false);
-   }
-   cb(null, true);
+const uploadFilter = function(req, file, cb) {
+  // filter rules here
+  if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF|bmp|BMP|jfif|JFIF)$/)) {
+    req.fileValidationError = 'Only image files are allowed!,go back and try again';
+    return cb(new Error('Only image files are allowed!,go back and try again'), false);
+  }
+  cb(null, true);
 };
 
 
 
 
-var upload = multer({ storage: Storage,fileFilter: uploadFilter}).array('file',3);
+var upload = multer({
+  storage: Storage,
+  fileFilter: uploadFilter
+}).array('file', 3);
 
 
 const port = 3000;
 
-app.use(bodyParser.urlencoded({ extended: false }));
-//app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
+// app.use(bodyParser.json());
 
 
 app.use(session({
@@ -66,18 +73,23 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/regDb', {useNewUrlParser: true,useUnifiedTopology: true});
-mongoose.set("useCreateIndex",true);
+mongoose.connect('mongodb://localhost/regDb', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
+mongoose.set("useCreateIndex", true);
+mongoose.set('useFindAndModify', false);
+
 const regSchema = new mongoose.Schema({
-  fname : {
+  fname: {
     type: String,
     required: true
   },
-  lname : {
+  lname: {
     type: String,
     required: true
   },
-  username : {
+  username: {
     type: String,
     unique: true,
     required: true
@@ -131,58 +143,67 @@ passport.use(new GoogleStrategy({
   function(accessToken, refreshToken, profile, cb) {
     console.log(profile);
 
-    user.findOrCreate({ fname: profile.name.givenName,lname:profile.name.familyName,username:profile.emails[0].value }, function (err, user) {
-      return cb(err, user);  });
+    user.findOrCreate({
+      fname: profile.name.givenName,
+      lname: profile.name.familyName,
+      username: profile.emails[0].value
+    }, function(err, user) {
+      return cb(err, user);
+    });
   }
 ));
 
 const colSchema = new mongoose.Schema({
-  cname : {
+  cname: {
     type: String,
     required: true
   },
-  ccity : {
+  ccity: {
     type: String,
     required: true
   },
-  cutoff : {
+  cutoff: {
     type: Number,
     required: true
   },
-  ratings : {
+  ratings: {
     type: Number,
     required: true
   },
-   fees : {
+  fees: {
     type: Number,
     required: true
   },
-  image: [
-      {
+  image: [{
 
-          type: String
-
+    type: String
 
 
-      }
-    ]
-   // image :[{
-   //    type: String,
-   //    required: true
-   //  }],
+
+  }]
+  // image :[{
+  //    type: String,
+  //    required: true
+  //  }],
 });
 
-var college = mongoose.model('college',colSchema);
+var college = mongoose.model('college', colSchema);
 
 
-app.get('/', (req, res) => {res.render("edu",{neww:''});
+app.get('/', (req, res) => {
+  res.render("edu", {
+    neww: ''
+  });
   //res.sendFile(__dirname+'/edu.html');
 
 });
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 
-app.get('/reg.html', (req, res) => {res.sendFile(__dirname+'/reg.html');
+app.get('/reg.html', (req, res) => {
+  res.render('reg', {
+    err: ""
+  });
 
 });
 
@@ -191,10 +212,12 @@ app.get('/reg.html', (req, res) => {res.sendFile(__dirname+'/reg.html');
 
 
 app.get('/home.html', (req, res) => {
-  if(req.isAuthenticated()){
-  res.sendFile(__dirname+'/home.html');}
-  else{
-    res.render("edu",{neww:''});
+  if (req.isAuthenticated()) {
+    res.sendFile(__dirname + '/home.html');
+  } else {
+    res.render("edu", {
+      neww: ''
+    });
   }
 });
 
@@ -205,19 +228,29 @@ app.post('/reg.html', (req, res) => {
   const p = req.body.password;
   // const cp = req.body.password_confirmation;
 
-user.register({fname : fn,lname : ln,username : e,}, req.body.password, function(err, user) {
-  if (err) {  res.redirect('/reg.html');
-console.log(err);}
- else {
-  // passport.authenticate("local")(req,res,()=>{
-     res.render("edu",{neww:''});
-//   });
+  user.register({
+    fname: fn,
+    lname: ln,
+    username: e
+  }, req.body.password, function(err, user) {
+    if (err) {
+      req.flash('message', 'User Already Exist');
+      res.render('reg', {
+        err: req.flash('message')
+      });
+      console.log(err);
+    } else {
+      // passport.authenticate("local")(req,res,()=>{
+      res.render("edu", {
+        neww: ''
+      });
+      //   });
 
- }
+    }
 
-});
-    // Value 'result' is set to false. The user could not be authenticated since the user is not active
   });
+  // Value 'result' is set to false. The user could not be authenticated since the user is not active
+});
 // const fn = req.body.first_name;
 // const ln = req.body.last_name;
 // const e = req.body.email;
@@ -237,65 +270,87 @@ console.log(err);}
 
 
 app.post('/edu.html', (req, res) => {
-  if(req.body.username==process.env.ADMIN_UN && req.body.password==process.env.ADMIN_PW ){
-    res.sendFile(__dirname+'/admin.html');
-  }
+  if (req.body.username == process.env.ADMIN_UN && req.body.password == process.env.ADMIN_PW) {
+    var mysort = {cutoff: -1};
+    college.find((err, docs) => {
+      if (err) {
+        console.log(err);
+      } else {
 
-  else{
-    const user1= new user ({
-      username:req.body.username,
-      password:req.body.password
+        res.render('admin', {
+          list: docs
+        });
+      }
+    }).sort(mysort);
+  } else {
+    const user1 = new user({
+      username: req.body.username,
+      password: req.body.password
     });
-    if(!req.body.username){
-  res.json({success: false, message: "Username was not given"}) ;
-} else {
+    if (!req.body.username) {
+      res.json({
+        success: false,
+        message: "Username was not given"
+      });
+    } else {
 
-  if(!req.body.password){
-    res.json({success: false, message: "Password was not given"});
-  }else{
-    passport.authenticate('local', function (err, user1, info) {
-       if(err){
-         res.json({success: false, message: err}) ;
-       } else{
-        if (! user1) {
-          req.flash('message', 'Username/Password INCORRECT');
-          res.render('edu',{neww:req.flash('message')});
-        //  res.json({success: false, message: 'username or password incorrect'});
-        } else{
+      if (!req.body.password) {
+        res.json({
+          success: false,
+          message: "Password was not given"
+        });
+      } else {
+        passport.authenticate('local', function(err, user1, info) {
+          if (err) {
+            res.json({
+              success: false,
+              message: err
+            });
+          } else {
+            if (!user1) {
+              req.flash('message', 'Username/Password INCORRECT');
+              res.render('edu', {
+                neww: req.flash('message')
+              });
+              //  res.json({success: false, message: 'username or password incorrect'});
+            } else {
 
-          req.login(user1, function(err){
-            if(err){
-              res.json({success: false, message: err}) ;
-            }else{
+              req.login(user1, function(err) {
+                if (err) {
+                  res.json({
+                    success: false,
+                    message: err
+                  });
+                } else {
 
-              res.redirect("/home.html");
+                  res.redirect("/home.html");
+                }
+              });
             }
-          }) ;
-        }
-       }
-    })(req, res);
+          }
+        })(req, res);
+      }
+    }
+    //   const user1= new user ({
+    //     username:req.body.username,
+    //     password:req.body.password
+    //   });
+    //
+    // req.login(user1, function(err) {
+    //   if (err) { console.log(err); }
+    //   else{
+    //
+    //     passport.authenticate("local")(req,res,()=>{
+    //       res.redirect('/home.html');
+    //     });
+    //    }
+    // });
   }
-}
-  //   const user1= new user ({
-  //     username:req.body.username,
-  //     password:req.body.password
-  //   });
-  //
-  // req.login(user1, function(err) {
-  //   if (err) { console.log(err); }
-  //   else{
-  //
-  //     passport.authenticate("local")(req,res,()=>{
-  //       res.redirect('/home.html');
-  //     });
-  //    }
-  // });
-}
 });
 
-  //old
-  // const logu=req.body.username;
-  // const logp=req.body.password;
+//old
+// const logu=req.body.username;
+// const logp=req.body.password;
 //   if(logu==process.env.ADMIN_UN && logp==process.env.ADMIN_PW ){
 //     res.sendFile(__dirname+'/admin.html');
 //   }
@@ -316,84 +371,160 @@ app.post('/edu.html', (req, res) => {
 // });
 
 
-app.post('/home.html', function (req, res) {
-  const per= (req.body.ans);
-  console.log(per);
-//var cdata=college.find({});
-//console.log(cdata);
+app.post('/home.html', function(req, res) {
+  var a = Number(req.body.physics);
+  var b = Number(req.body.chemistry);
+  var c = Number(req.body.maths);
+  const d = Number((a + b + c) / 3);
+  const per = d;
+  //var cdata=college.find({});
+  //console.log(cdata);
+var mysort = {cutoff: -1};
 
-
-  college.find({cutoff:{$lt: per}},function(err,college){
-    if(err){
+  college.find({
+    cutoff: {
+      $lt: per
+    }
+  }, function(err, college) {
+    if (err) {
       console.log(err);
+    } else {
+
+
+      res.render("find", {
+        percen: per,
+        list: college
+      });
+      //res.render("find");,list: college
     }
-    else{
 
-
-        res.render("find", {percen: per,list: college});
-//res.render("find");,list: college
-    }
-
-  }
-);
+  }).sort(mysort);
 
 });
 
 
 
-app.post('/adminadd',upload, async function(req,res){
+app.post('/adminadd', upload, async function(req, res) {
 
 
 
 
-  var u2 = new college({ cname : req.body.cname,
-  ccity : req.body.ccity,
-  cutoff: req.body.cutoff,
-  ratings : req.body.ratings,
-  fees : req.body.fees,
-  //image :{name:req.files.filename}
+  var u2 = new college({
+    cname: req.body.cname,
+    ccity: req.body.ccity,
+    cutoff: req.body.cutoff,
+    ratings: req.body.ratings,
+    fees: req.body.fees,
+    //image :{name:req.files.filename}
 
   });
-   for(var i=0;i<3;i++) {
+  for (var i = 0; i < 3; i++) {
 
-// for(var i=0;i<3;i++){
-//   var image = {
-//                    name: req.files[i].filename,
-//
-//                };
-//            u2.image.push(image);
-// }
-//for(var j=0;j<3;j++){
- const parser = new DatauriParser();
- const buffer =req.files[i].buffer;
- parser.format('.png', buffer);
-var result= await cloudinary.uploader.upload(parser.content);
-var image= result.secure_url;
-//var image= result.secure_url;
- u2.image.push(image);
-
-
-}
- u2.save();
-res.sendFile(__dirname+'/admin.html');
-// res.redirect('/admin.html');
+    // for(var i=0;i<3;i++){
+    //   var image = {
+    //                    name: req.files[i].filename,
+    //
+    //                };
+    //            u2.image.push(image);
+    // }
+    //for(var j=0;j<3;j++){
+    const parser = new DatauriParser();
+    const buffer = req.files[i].buffer;
+    parser.format('.png', buffer);
+    var result = await cloudinary.uploader.upload(parser.content);
+    var image = result.secure_url;
+    //var image= result.secure_url;
+    u2.image.push(image);
 
 
+  }
+  await u2.save();
+  college.find((err, docs) => {
+    if (err) {
+      console.log(err);
+    } else {
 
-
+      res.render('admin', {
+        list: docs
+      });
+    }
+  }).sort({cutoff: -1});
+  //res.render('/admin');
+  // res.redirect('/admin.html');
 });
+
+app.get('/adminupdate/:id', (req, res) => {
+  college.findById(req.params.id, (err, docs) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(docs);
+      res.render('adminedit', {
+        cdata: docs
+      });
+    }
+  }).sort({cutoff: -1});
+});
+app.post('/eset', async(req, res) => {
+  console.log(req.body._id);
+  await college.findOneAndUpdate({_id: req.body._id},req.body,{new:true} ,(err, doc) => {
+    if (err) {
+      console.log(err);
+      }
+    else {
+
+      college.find((err, docs) => {
+        if (err) {
+          console.log(err);
+        } else {
+
+          res.render('admin', {
+            list: docs
+          });
+        }
+      }).sort({cutoff: -1});
+
+    }
+  });
+});
+
+app.get('/admincancel', (req, res) => {
+  req.flash('message', 'You Are Logged Out');
+  res.render('edu', {
+    neww: req.flash('message')
+
+  });
+});
+app.get('/admindelete/:id', async (req, res) => {
+  console.log(req.params.id);
+  await college.findByIdAndRemove(req.params.id, (err, doc) => {
+    if (err) {
+      console.log(err);
+    } else {
+      //res.render('admin',{list:docs});
+      res.redirect('/admincancel');
+    }
+  });
+});
+
 app.get('/auth/google',
-  passport.authenticate('google', { scope: ['openid', 'email', 'profile'] }));
+  passport.authenticate('google', {
+    scope: ['openid', 'email', 'profile']
+  }));
 
-  app.get('/auth/google/home',
-    passport.authenticate('google', { failureRedirect: '/' }),
-    function(req, res) {
-      // Successful authentication, redirect home.
-      res.redirect('/home.html');
-    });
+app.get('/auth/google/home',
+  passport.authenticate('google', {
+    failureRedirect: '/'
+  }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/home.html');
+  });
 
-app.get('/logout',(req,res)=>{
+app.get('/logout', (req, res) => {
   req.logout();
-  res.render("edu",{neww:''});
+  res.render("edu", {
+    neww: ''
+  });
 
 });

@@ -11,9 +11,18 @@
     <title>Registration</title>
   </head>
   <body style="background-color:green">
+    <div class="" style="background: #a8ff78; text-align: center;/* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #78ffd6, #a8ff78);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #78ffd6, #a8ff78); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    ">
+      <h1>
+        <img src="book2.jfif" alt="" height="75" >
+        Education Planner
+      </h1>
+    </div>
     <div class="container">
         <div class="row centered-form">
-        <div class="col-xs-12 col-sm-8 col-md-4 col-sm-offset-2 col-md-offset-4 regg">
+        <div class="col-xs-12 col-sm-8 col-md-4 col-sm-2 col-md-4 regg">
         	<div class="panel panel-default">
         		<div class="panel-heading">
 			    		<h3 class="panel-title">Please sign up for Education Planner <small>It's free!</small></h3>
@@ -49,8 +58,13 @@
 			    					</div>
 			    				</div> -->
 			    			</div>
-
 			    			<input type="submit" value="Register" class="btn btn-info btn-block reg-button">
+                <% if ( err.length > 0 ) { %>
+                  <br>
+                  <div class="alert  alert-danger" style="display:flex;justify-content:center;flex-wrap:wrap;background-color: #f8d7da;border-color: #f5c6cb;">
+                  <strong>SORRY!</strong> <%= err%>
+                  </div>
+                  <% } %>
                 <div style="text-align:center;margin-top:35px">
 
                     <a class="btn btn-dark" href="/auth/google" role="button" style="text-transform:none">
