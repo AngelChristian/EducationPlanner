@@ -33,64 +33,112 @@
     <div class="d-flex flex-column justify-content-center" style="box-shadow: 0 0 10px #000;width:70%;text-align:center;background-color:#a4d6ef;margin:auto;min-height: 500px;">
 
 
-    <div class="container d-flex justify-content-center" style="text-align:center">
+      <div class="container d-flex justify-content-center" style="text-align:center">
 
-      <div class="row d-flex justify-content-center"style="text-align:center" >
-        <div class="col-xs-12 ">
-          <nav style="text-align:center" class="d-flex justify-content-center">
-            <div class="nav nav-tabs nav-fill navtab" id="nav-tab" role="tablist" style="display:flex;align-items:center">
-              <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">College-Finder</a>
-              <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">PLACES NEAR-BY</a>
-              <a class="nav-item nav-link" id="nav-about-tab" data-toggle="tab" href="#nav-about" role="tab" aria-controls="nav-about" aria-selected="false">Study-Material</a>
-            </div>
-          </nav>
+        <div class="row d-flex justify-content-center" style="text-align:center">
+          <div class="col-xs-12 ">
+            <nav style="text-align:center" class="d-flex justify-content-center">
+              <div class="nav nav-tabs nav-fill navtab" id="nav-tab" role="tablist" style="display:flex;align-items:center">
+                <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">College-Finder</a>
+                <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">PLACES NEAR-BY</a>
+                <a class="nav-item nav-link" id="nav-about-tab" data-toggle="tab" href="#nav-about" role="tab" aria-controls="nav-about" aria-selected="false">Study-Material</a>
+              </div>
+            </nav>
 
+
+          </div>
 
         </div>
 
       </div>
+      <div class="tab-content py-3 px-3 px-sm-0  d-flex justify-content-center" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+          <strong>ENTER MARKS:</strong>
+          <form action="#" id="mkform">
+            <div class="form-group row" style="text-align:center">
+              <div class="form-group col-sm-12 ">
+                <label for="">PHYSICS:</label></br>
+                <input type="number" class="form-control ph" placeholder="(1-100)" id="" name="physics" min="1" max="100" required>
+              </div>
+              <div class="form-group col-sm-12 ">
+                <label for="">CHEMISTRY:</label></br>
+                <input type="number" class="form-control ch" placeholder="(1-100)" id="" name="chemistry" min="1" max="100" required>
+              </div>
+              <div class="form-group col-sm-12 ">
+                <label for="">MATHS:</label></br>
+                <input type="number" class="form-control ma" placeholder="(1-100)" id="" name="maths" min="1" max="100" required>
+              </div>
+            </div>
 
-    </div>
-    <div class="tab-content py-3 px-3 px-sm-0  d-flex justify-content-center" id="nav-tabContent">
-      <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-        <strong>ENTER MARKS:</strong>
-        <form action="#" id="mkform">
-          <div class="form-group row" style="text-align:center">
-            <div class="form-group col-sm-12 ">
-              <label for="">PHYSICS:</label></br>
-              <input type="number" class="form-control ph" placeholder="(1-100)" id="" name="physics" min="1" max="100" required>
-            </div>
-            <div class="form-group col-sm-12 ">
-              <label for="">CHEMISTRY:</label></br>
-              <input type="number" class="form-control ch" placeholder="(1-100)" id="" name="chemistry" min="1" max="100" required>
-            </div>
-            <div class="form-group col-sm-12 ">
-              <label for="">MATHS:</label></br>
-              <input type="number" class="form-control ma" placeholder="(1-100)" id="" name="maths" min="1" max="100" required>
+
+
+
+
+            <br />
+
+            <button type="submit" formmethod="post" formaction="/home.html" class="btn-lg btn-primary">FIND COLLEGE</button>
+          </form>
+        </div>
+
+        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+
+          <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+               SELECT THE COLLEGE
+              <span class="caret"></span>
+            </button>
+            <div class="dropdown-menu d1" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item c" href="#">The Maharaja Sayajirao University of Baroda</a>
+              <a class="dropdown-item c" href="#">Sardar Vallabhbhai Patel Institute of Technology</a>
+              <a class="dropdown-item c" href="#">Parul Institute Of Technology,vadodara</a>
+              <a class="dropdown-item c" href="#">Babaria Institute of Technology,vadodara</a>
+              <a class="dropdown-item c" href="#">ITM Universe, Vadodara </a>
+              <a class="dropdown-item c" href="#">Neotech Institute of Technology Vadodara</a>
+              <a class="dropdown-item c" href="#">K. J. Institute of Engineering & Technology</a>
+              <a class="dropdown-item c" href="#">Vadodara Institute of Engineering</a>
+              <a class="dropdown-item c" href="#">Sigma Institute of Engineering,vadodara</a>
             </div>
           </div>
+          <br>
+          <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+               SELECT THE PLACE TYPE
+              <span class="caret"></span>
+            </button>
+            <div class="dropdown-menu d2" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item d" href="#">Arts and Entertainment</a>
+              <a class="dropdown-item d" href="#">Food</a>
+              <a class="dropdown-item d" href="#">Parks and Outdoors</a>
+              <a class="dropdown-item d" href="#">Pharmacy</a>
+              <a class="dropdown-item d" href="#">hospital </a>
+              <a class="dropdown-item d" href="#">Shopping Center</a>
+              <a class="dropdown-item d" href="#">Hostel</a>
+              <a class="dropdown-item d" href="#">Bus Station</a>
+            </div>
+          </div>
+            <form action="/nearb" method="post">
+              <div class="form-group">
+                <br>
 
+            <label for="exampleInput1">Selected College:</label>
+            <input type="text" name="place" class="form-control" id="exampleInput1" required readonly>
+            
+          </div>
+          <div class="form-group">
+            <label for="t2">Selected Category:</label>
+            <input type="text" name="category" class="form-control t2" id="t2" required readonly>
+            <br>
 
-
-
-
-          <br />
-
-          <button type="submit" formmethod="post" formaction="/home.html" class="btn-lg btn-primary">FIND COLLEGE</button>
-        </form>
-      </div>
-
-      <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-        Et et consectetur ipsum labore excepteur est proident excepteur ad velit occaecat qui minim occaecat veniam. Fugiat veniam incididunt anim aliqua enim pariatur veniam sunt est aute sit dolor anim. Velit non irure adipisicing aliqua ullamco
-        irure incididunt irure non esse consectetur nostrud minim non minim occaecat. Amet duis do nisi duis veniam non est eiusmod tempor incididunt tempor dolor ipsum in qui sit. Exercitation mollit sit culpa nisi culpa non adipisicing
-        reprehenderit do dolore. Duis reprehenderit occaecat anim ullamco ad duis occaecat ex.
-      </div>
-      <div class="tab-pane fade" id="nav-about" role="tabpanel" aria-labelledby="nav-about-tab">
-        <strong>THIS SECTION WILL PROVIDE YOU WITH STUDY MATERIAL LINKS FROM ALL IMPORTANT SOURCES.<br />
-          IT WILL BE UPDATED SOON</strong>
+            <button type="submit" class="btn btn-success">Submit</button>
+          </form>
+        </div>
+        </div>
+        <div class="tab-pane fade" id="nav-about" role="tabpanel" aria-labelledby="nav-about-tab">
+          <strong>THIS SECTION WILL PROVIDE YOU WITH STUDY MATERIAL LINKS FROM ALL IMPORTANT SOURCES.<br />
+            IT WILL BE UPDATED SOON</strong>
+        </div>
       </div>
     </div>
-  </div>
   </section>
   <!-- ./Tabs -->
   <footer>

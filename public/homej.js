@@ -61,4 +61,26 @@ $("#mkform").submit(function(event){
    $(".an").val(d);
 
 
+
 });
+
+// $(".dropdown-menu a").click(function(){
+//   $(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+//   $(this).parents(".dropdown").find('.btn').val($(this).data('value'));
+// });
+$(".d1 .c").click(function(){
+  // $(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+  $('#exampleInput1').val($(this).text());
+});
+$(".d2 .d").click(function(){
+  // $(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+  $(t2).val($(this).text());
+});
+
+
+
+// You need to alert if a change happens. Try like so:
+//
+// $("#sel123").change(function() {
+//   alert($(this).find("option:selected").text());
+// });

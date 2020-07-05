@@ -19,7 +19,9 @@ var findOrCreate = require('mongoose-findorcreate');
 var flash = require('connect-flash');
 const DatauriParser = require('datauri/parser');
 const swal = require('sweetalert');
-
+const fetch = require('node-fetch');
+// const opencage = require('opencage-api-client');
+// var mapsdk = require('mapmyindia-sdk-nodejs');
 //cloudinary
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -526,5 +528,81 @@ app.get('/logout', (req, res) => {
   res.render("edu", {
     neww: ''
   });
+
+});
+
+app.post('/nearb',async(req,res)=>{
+  let place = req.body.place;
+  const category = req.body.category;
+  if(place=='Parul Institute Of Technology,vadodara'){
+    lat=22.289325;
+    lng=73.363822;
+  }
+  else if (place=='The Maharaja Sayajirao University of Baroda') {
+    lat=22.298041;
+    lng=73.196995;
+  }
+  else if (place=='Sardar Vallabhbhai Patel Institute of Technology') {
+    lat=22.468938;
+    lng=73.076251;
+  }
+  else if (place=='Babaria Institute of Technology,vadodara') {
+    lat=22.187696;
+    lng=73.187851;
+  }
+  else if (place=='ITM Universe, Vadodara') {
+    lat=22.450739;
+    lng=73.354765;
+  }
+  else if (place=='Neotech Institute of Technology Vadodara') {
+    lat=22.403477;
+    lng=73.220829;
+  }
+  else if (place=='K. J. Institute of Engineering & Technology') {
+    lat=22.565264;
+    lng=73.243309;
+  }
+  else if (place=='Vadodara Institute of Engineering') {
+    lat=22.407053;
+    lng=73.306968;
+  }
+  else{
+    lat=22.325011;
+    lng=73.280850;
+  }
+  // await opencage.geocode({q: place}).then(data => {
+  // console.log(JSON.stringify(data));
+  // if (data.status.code == 200) {
+  //   if (data.results.length > 0) {
+  //     var place = data.results[0];
+  //     console.log(place.formatted);
+  //     console.log(place.geometry);
+  //     console.log(place.annotations.timezone.name);
+      // const lat = place.geometry.lat;
+      // const lng = place.geometry.lng;
+      var requestOptions = {
+  method: 'GET',
+  redirect: 'follow'
+};
+
+ fetch(`https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?f=json&category=${category}&location=${lng},${lat}&outFields=Place_addr, PlaceName,Phone, Type&maxLocations=15`, requestOptions)
+  .then(response => response.json())
+  .then(result => {console.log(result);
+    res.render('nearby',{list:result.candidates,lat:lat,lng:lng});
+  })
+  .catch(error => {console.log('error', error);
+      res.redirect('/home.html');
+      });
+
+    // }
+//   }
+//    else {
+//     console.log('error', data.status.message);
+//     res.redirect('/home.html');
+//   }
+// }).catch(error => {
+//   console.log('error', error.message);
+//   res.redirect('/home.html');
+// });
 
 });
