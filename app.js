@@ -20,9 +20,8 @@ var flash = require('connect-flash');
 const DatauriParser = require('datauri/parser');
 const swal = require('sweetalert');
 const fetch = require('node-fetch');
-// const opencage = require('opencage-api-client');
-// var mapsdk = require('mapmyindia-sdk-nodejs');
-//cloudinary
+
+//cloudinary i.e cloud storage of images
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.API_ID,
@@ -57,13 +56,9 @@ var upload = multer({
 }).array('file', 3);
 
 
-const port = 3000;
-
 app.use(bodyParser.urlencoded({
   extended: false
 }));
-// app.use(bodyParser.json());
-
 
 app.use(session({
   secret: process.env.SECRET,
@@ -74,6 +69,8 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
+
+//mongoose connection
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/regDb', {
   useNewUrlParser: true,
@@ -82,6 +79,7 @@ mongoose.connect('mongodb://localhost/regDb', {
 mongoose.set("useCreateIndex", true);
 mongoose.set('useFindAndModify', false);
 
+// user schema
 const regSchema = new mongoose.Schema({
   fname: {
     type: String,
@@ -96,15 +94,6 @@ const regSchema = new mongoose.Schema({
     unique: true,
     required: true
   },
-  // pswrd :{
-  //   type: String,
-  //   required: true
-  // },
-  // cpswrd :{
-  //   type: String,
-  //   required: true
-  // }
-
 });
 
 regSchema.plugin(passportLocalMongoose);
@@ -113,17 +102,7 @@ regSchema.plugin(findOrCreate);
 
 var user = new mongoose.model('user', regSchema);
 
-//passport.use(user.createStrategy());
-// passport.use(new LocalStrategy(
-//   function(username, password, done) {
-//     User.findOne({ username: username }, function (err, user) {
-//       if (err) { return done(err); }
-//       if (!user) { return done(null, false); }
-//       if (!user.verifyPassword(password)) { return done(null, false); }
-//       return done(null, user);
-//     });
-//   }
-// ));
+//passport config
 passport.use(new LocalStrategy(user.authenticate()));
 
 passport.serializeUser(function(user, done) {
@@ -155,6 +134,7 @@ passport.use(new GoogleStrategy({
   }
 ));
 
+// college schema
 const colSchema = new mongoose.Schema({
   cname: {
     type: String,
@@ -177,29 +157,16 @@ const colSchema = new mongoose.Schema({
     required: true
   },
   image: [{
-
     type: String
-
-
-
   }]
-  // image :[{
-  //    type: String,
-  //    required: true
-  //  }],
+
 });
 
 var college = mongoose.model('college', colSchema);
 
 
-app.get('/', (req, res) => {
-  res.render("edu", {
-    neww: ''
-  });
-  //res.sendFile(__dirname+'/edu.html');
-
-});
-
+//server start
+const port = 3000;
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 
 app.get('/reg.html', (req, res) => {
@@ -209,18 +176,13 @@ app.get('/reg.html', (req, res) => {
 
 });
 
+// routes handling
+// edu=>intial page   ;   home=>option slection page   ;  admin=>admin page    ; reg=>registration page
+app.get('/', (req, res) => {
+  res.render("edu", {
+    neww: ''
+  });
 
-
-
-
-app.get('/home.html', (req, res) => {
-  if (req.isAuthenticated()) {
-    res.sendFile(__dirname + '/home.html');
-  } else {
-    res.render("edu", {
-      neww: ''
-    });
-  }
 });
 
 app.post('/reg.html', (req, res) => {
@@ -228,7 +190,7 @@ app.post('/reg.html', (req, res) => {
   const ln = req.body.last_name;
   const e = req.body.email;
   const p = req.body.password;
-  // const cp = req.body.password_confirmation;
+
 
   user.register({
     fname: fn,
@@ -242,33 +204,14 @@ app.post('/reg.html', (req, res) => {
       });
       console.log(err);
     } else {
-      // passport.authenticate("local")(req,res,()=>{
       res.render("edu", {
         neww: ''
       });
-      //   });
-
     }
 
   });
-  // Value 'result' is set to false. The user could not be authenticated since the user is not active
+
 });
-// const fn = req.body.first_name;
-// const ln = req.body.last_name;
-// const e = req.body.email;
-// const p = req.body.password;
-// const cp = req.body.password_confirmation;
-//
-// var u1 = new user({ fname : fn,
-// lname : ln,
-// email : e,
-// pswrd : p,
-// cpswrd :cp, });
-//
-// //u1.save();
-//
-// res.redirect('/');
-// });
 
 
 app.post('/edu.html', (req, res) => {
@@ -333,45 +276,18 @@ app.post('/edu.html', (req, res) => {
         })(req, res);
       }
     }
-    //   const user1= new user ({
-    //     username:req.body.username,
-    //     password:req.body.password
-    //   });
-    //
-    // req.login(user1, function(err) {
-    //   if (err) { console.log(err); }
-    //   else{
-    //
-    //     passport.authenticate("local")(req,res,()=>{
-    //       res.redirect('/home.html');
-    //     });
-    //    }
-    // });
   }
 });
 
-//old
-// const logu=req.body.username;
-// const logp=req.body.password;
-//   if(logu==process.env.ADMIN_UN && logp==process.env.ADMIN_PW ){
-//     res.sendFile(__dirname+'/admin.html');
-//   }
-//   else{
-//   user.findOne({$and:[{email : logu} ,{pswrd : logp}]},function (err, user) {
-//   if (err) {console.log(err);}
-//   if(!user){
-//
-// return res.send("INCORRECT DATA,GO BACK");
-//
-//   }
-// else{
-//   return res.sendFile(__dirname+'/home.html');
-// // return res.redirect('/home.html')
-// }
-// });
-// }
-// });
-
+app.get('/home.html', (req, res) => {
+  if (req.isAuthenticated()) {
+    res.sendFile(__dirname + '/home.html');
+  } else {
+    res.render("edu", {
+      neww: ''
+    });
+  }
+});
 
 app.post('/home.html', function(req, res) {
   var a = Number(req.body.physics);
@@ -379,8 +295,6 @@ app.post('/home.html', function(req, res) {
   var c = Number(req.body.maths);
   const d = Number((a + b + c) / 3);
   const per = d;
-  //var cdata=college.find({});
-  //console.log(cdata);
 var mysort = {cutoff: -1};
 
   college.find({
@@ -397,7 +311,6 @@ var mysort = {cutoff: -1};
         percen: per,
         list: college
       });
-      //res.render("find");,list: college
     }
 
   }).sort(mysort);
@@ -405,11 +318,8 @@ var mysort = {cutoff: -1};
 });
 
 
-
+// handle add data request
 app.post('/adminadd', upload, async function(req, res) {
-
-
-
 
   var u2 = new college({
     cname: req.body.cname,
@@ -417,28 +327,14 @@ app.post('/adminadd', upload, async function(req, res) {
     cutoff: req.body.cutoff,
     ratings: req.body.ratings,
     fees: req.body.fees,
-    //image :{name:req.files.filename}
-
   });
   for (var i = 0; i < 3; i++) {
-
-    // for(var i=0;i<3;i++){
-    //   var image = {
-    //                    name: req.files[i].filename,
-    //
-    //                };
-    //            u2.image.push(image);
-    // }
-    //for(var j=0;j<3;j++){
     const parser = new DatauriParser();
     const buffer = req.files[i].buffer;
     parser.format('.png', buffer);
     var result = await cloudinary.uploader.upload(parser.content);
     var image = result.secure_url;
-    //var image= result.secure_url;
     u2.image.push(image);
-
-
   }
   await u2.save();
   college.find((err, docs) => {
@@ -451,10 +347,9 @@ app.post('/adminadd', upload, async function(req, res) {
       });
     }
   }).sort({cutoff: -1});
-  //res.render('/admin');
-  // res.redirect('/admin.html');
-});
+  });
 
+// handles update data
 app.get('/adminupdate/:id', (req, res) => {
   college.findById(req.params.id, (err, docs) => {
     if (err) {
@@ -490,25 +385,28 @@ app.post('/eset', async(req, res) => {
   });
 });
 
+// route protection alternative
 app.get('/admincancel', (req, res) => {
   req.flash('message', 'You Are Logged Out');
   res.render('edu', {
     neww: req.flash('message')
-
   });
 });
+
+// handles data delete
 app.get('/admindelete/:id', async (req, res) => {
   console.log(req.params.id);
   await college.findByIdAndRemove(req.params.id, (err, doc) => {
     if (err) {
       console.log(err);
     } else {
-      //res.render('admin',{list:docs});
-      res.redirect('/admincancel');
+      res.render('admin',{list:docs});
+      //res.redirect('/admincancel');
     }
   });
 });
 
+// authentication
 app.get('/auth/google',
   passport.authenticate('google', {
     scope: ['openid', 'email', 'profile']
@@ -519,7 +417,7 @@ app.get('/auth/google/home',
     failureRedirect: '/'
   }),
   function(req, res) {
-    // Successful authentication, redirect home.
+    // Successful authentication, redirect home.i.e. main page
     res.redirect('/home.html');
   });
 
@@ -531,6 +429,8 @@ app.get('/logout', (req, res) => {
 
 });
 
+
+// handles near by request
 app.post('/nearb',async(req,res)=>{
   let place = req.body.place;
   const category = req.body.category;
@@ -570,16 +470,6 @@ app.post('/nearb',async(req,res)=>{
     lat=22.325011;
     lng=73.280850;
   }
-  // await opencage.geocode({q: place}).then(data => {
-  // console.log(JSON.stringify(data));
-  // if (data.status.code == 200) {
-  //   if (data.results.length > 0) {
-  //     var place = data.results[0];
-  //     console.log(place.formatted);
-  //     console.log(place.geometry);
-  //     console.log(place.annotations.timezone.name);
-      // const lat = place.geometry.lat;
-      // const lng = place.geometry.lng;
       var requestOptions = {
   method: 'GET',
   redirect: 'follow'
@@ -593,16 +483,4 @@ app.post('/nearb',async(req,res)=>{
   .catch(error => {console.log('error', error);
       res.redirect('/home.html');
       });
-
-    // }
-//   }
-//    else {
-//     console.log('error', data.status.message);
-//     res.redirect('/home.html');
-//   }
-// }).catch(error => {
-//   console.log('error', error.message);
-//   res.redirect('/home.html');
-// });
-
 });
